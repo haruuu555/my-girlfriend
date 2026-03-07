@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>胡青云 · 羊皮卷宗</title>
+  <style>
+    /* ========== 奥林匹斯图书馆 · 古典同款样式 ========== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Georgia', 'Times New Roman', '宋体', serif;
+      background: #2b1e14;
+      background-image: radial-gradient(circle at 10% 20%, rgba(100, 70, 40, 0.2) 0%, transparent 30%),
+                      repeating-linear-gradient(45deg, rgba(70, 50, 30, 0.1) 0px, rgba(70, 50, 30, 0.1) 2px, transparent 2px, transparent 6px);
+      min-height: 100vh;
+      color: #3e2e21;
+      line-height: 1.6;
+    }
+
+    .main-wrapper {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #f7efe0;
+      background-image: linear-gradient(165deg, #e8dccc 0%, #faf1e2 80%),
+                      repeating-linear-gradient(0deg, #d6c8b8 0px, #d6c8b8 1px, transparent 1px, transparent 6px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 0 1px #ac9b86 inset, 0 0 0 2px #dacbb8 inset;
+      border-radius: 28px 28px 16px 16px;
+      margin-top: 1.5rem;
+      margin-bottom: 2rem;
+      padding: 1rem 2rem 3rem 2rem;
+    }
+
+    /* 顶部导航 — 深色木纹 */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 2rem;
+      background: #341f12;
+      background-image: linear-gradient(145deg, #3e2a1b, #2c1b0f);
+      border-radius: 60px 60px 20px 20px;
+      box-shadow: 0 8px 0 #1f130a, 0 10px 20px rgba(0,0,0,0.3);
+      border-bottom: 2px solid #b4966b;
+      margin-bottom: 2rem;
+    }
+
+    .logo {
+      font-size: 1.9rem;
+      font-weight: 500;
+      color: #ebd7b8;
+      text-shadow: 2px 2px 0 #3f2b18, 3px 3px 0 #00000030;
+      letter-spacing: 3px;
+      font-family: 'Cinzel', 'Georgia', serif;
+      transition: 0.2s;
+      cursor: default;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .nav-links span {
+      color: #e2cfb3;
+      font-size: 1.15rem;
+      font-weight: 400;
+      padding: 0.5rem 0.2rem;
+      border-bottom: 2px solid #caac82;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-family: 'Cinzel', serif;
+    }
+
+    .back-link a {
+      background: #5f462b;
+      padding: 0.5rem 1.8rem;
+      border-radius: 40px;
+      font-size: 1rem;
+      color: #ecdbba;
+      border: 1px solid #b29265;
+      box-shadow: inset 0 1px 3px #ffefd1, 0 4px 0 #362415;
+      text-decoration: none;
+      transition: 0.1s ease;
+      font-family: 'Cinzel', serif;
+      letter-spacing: 1px;
+      display: inline-block;
+    }
+
+    .back-link a:hover {
+      background: #6e5438;
+      transform: translateY(-1px);
+      box-shadow: inset 0 1px 4px #ffeac5, 0 5px 0 #3d2c1a;
+    }
+
+    /* 日记卡片 — 羊皮卷轴效果 */
+    .diary-card {
+      background: #eadbc5;
+      background: linear-gradient(145deg, #f1e5d3, #ddceb5);
+      border-radius: 40px 12px 40px 12px;
+      padding: 2.5rem 3rem;
+      box-shadow: 8px 12px 16px -8px #4a3a28, inset 1px 1px 0 #fff4e2;
+      border: 1px solid #b49773;
+      margin: 2rem 0 2.5rem 0;
+      min-height: 450px;
+    }
+
+    .diary-title {
+      font-size: 2.2rem;
+      font-weight: 400;
+      color: #352918;
+      border-left: 8px solid #a57c54;
+      padding-left: 1.5rem;
+      margin-bottom: 2rem;
+      font-family: 'Cinzel', serif;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .diary-content {
+      font-size: 1.1rem;
+      color: #2f2319;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: 'Georgia', serif;
+      line-height: 1.8;
+      padding: 0 0.5rem;
+    }
+
+    .diary-content p {
+      margin-bottom: 1.2rem;
+    }
+
+    /* 页码 & 按钮条 */
+    .diary-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 2px dashed #b39470;
+    }
+
+    .page-indicator {
+      font-size: 1.2rem;
+      color: #5f4a33;
+      font-style: italic;
+      background: #dacbb8;
+      padding: 0.4rem 1.8rem;
+      border-radius: 40px;
+      border: 1px solid #af8b60;
+    }
+
+    .nav-button {
+      background: #866b48;
+      border: none;
+      color: #f2e0c5;
+      font-weight: bold;
+      border-radius: 40px;
+      cursor: pointer;
+      border-bottom: 4px solid #4d3a25;
+      font-size: 1.2rem;
+      padding: 0.8rem 2.8rem;
+      transition: 0.1s;
+      font-family: 'Cinzel', serif;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 0 #3d2e1c;
+    }
+
+    .nav-button:hover:not(:disabled) {
+      background: #9e825e;
+      transform: translateY(-2px);
+      border-bottom-width: 5px;
+    }
+
+    .nav-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      border-bottom-width: 2px;
+      transform: translateY(2px);
+    }
+
+    .nav-button.secondary {
+      background: #5f4d38;
+      border-bottom-color: #362b1d;
+    }
+
+    /* 模态框 — 问题验证 (同款管理员登录样式) */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(20, 12, 5, 0.7);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.2s;
+    }
+
+    .modal-overlay.show {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .question-card {
+      background: #f2e3cf;
+      background: linear-gradient(145deg, #f8edd9, #e3d1b5);
+      padding: 2.5rem 3rem;
+      border-radius: 60px 16px 60px 16px;
+      border: 4px solid #b49161;
+      box-shadow: 0 25px 40px #1f140b, inset 0 1px 5px #fff7e6;
+      width: 420px;
+      max-width: 90%;
+      text-align: center;
+    }
+
+    .question-card h2 {
+      font-size: 2rem;
+      color: #3f2b16;
+      margin-bottom: 1.8rem;
+      font-family: 'Cinzel', serif;
+      border-left: none;
+      padding-left: 0;
+      text-align: center;
+    }
+
+    .question-card p {
+      font-size: 1.2rem;
+      color: #4f3a24;
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+
+    .question-card input {
+      width: 100%;
+      padding: 1rem 1.2rem;
+      margin: 0.8rem 0;
+      border: 2px solid #c9aa7b;
+      background: #fdf3e3;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-family: 'Georgia', serif;
+    }
+
+    .question-card button {
+      background: #866b48;
+      border: none;
+      color: #faead3;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      width: 100%;
+      margin-top: 1rem;
+      cursor: pointer;
+      border-bottom: 4px solid #543f28;
+      transition: 0.1s;
+      font-family: 'Cinzel', serif;
+      letter-spacing: 2px;
+    }
+
+    .question-card button:hover {
+      background: #9f825d;
+    }
+
+    .close-modal {
+      margin-top: 1.2rem;
+      background: none;
+      border: none;
+      color: #7b613f;
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 1rem;
+      font-family: 'Georgia', serif;
+    }
+
+    .error-msg {
+      color: #b13e2d;
+      margin-top: 1rem;
+      font-style: italic;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 2rem;
+      padding: 1.5rem;
+      color: #b7a386;
+      border-top: 2px solid #bc9e78;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+<div class="main-wrapper">
+  <!-- 导航栏 简洁同款 -->
+  <header class="navbar">
+    <div class="logo">📜 胡青云·羊皮卷</div>
+    <div class="nav-links">
+      <span>日记 · 深渊回响</span>
+    </div>
+    <div class="back-link">
+      <a href="library.html" >📚 返回图书馆</a>
+    </div>
+  </header>
+
+  <!-- 日记动态展示区（三个日记切换） -->
+  <section class="diary-card" id="diaryCard">
+    <!-- 日记1 (默认显示) -->
+    <div id="diary1" style="display: block;">
+      <h2 class="diary-title">日记 · 壹</h2>
+      <div class="diary-content">
+        <p>……原来已经快两年了，我已经两年没写过字了啊。<br>
+        如果不是神婆说我怀的是个儿子，恐怕现在我也没有自由的空间，还能拿到我自己的包。可是包里除了这个本子，什么都不剩了。<br>
+        好像只是过了两年，怎么一点儿属于我的痕迹都没了呢？我已经变成了胜子媳妇，而不是青云。<br>
+        我已经尝试过很多次了，可这座山怎么翻也翻不过去，好像所有人都认识我。<br>
+        但怀孕后，对我的看管好像放松了很多。隔壁的婶子也劝我收收心和胜子好好过日子。<br>
+        这会不会是我最好的机会……<br>
+        可就算逃出去了，我还能继续做大学生吗。<br>
+        写下这行字的时候，我的骨头连带着手已经抖得不像话了。<br>
+        我以前从来没想过，原来人是能控制不住自己的手的。<br>
+        胜子说，这是对我不听话的惩罚。<br>
+        对不起，孩子。你的出生并不是我所期待的，我恨这个地方。<br>
+        我没法做你的母亲，但我感激你给了我喘息的空间。下辈子出生在一个幸福的家庭吧。</p>
+      </div>
+    </div>
+
+    <!-- 日记2 (初始隐藏) -->
+    <div id="diary2" style="display: none;">
+      <h2 class="diary-title">日记 · 贰</h2>
+      <div class="diary-content">
+        <p><strong>6月10日</strong><br>
+        他们不让我的妙妙上学，这怎么能行呢？<br>
+        自从上次流产后，这群恶魔看我的眼神越来越嫌恶了。我好像彻底失去了价值。<br>
+        要是当年成功了该多好啊，妙妙也不用出生在这个肮脏的地方。<br>
+        我的女儿，有时我也在想，你要是个男孩该多好。你也只是一个女孩，我没有办法恨你。<br>
+        更没有办法保护你。<br>
+        也许死亡才是我们最好的归宿。</p>
+        <p><strong>6月13日</strong><br>
+        李胜松口了，他说要送妙妙去上学。<br>
+        他才没有那么好心！我都听见了，他们只是想把女儿卖个好价钱！<br>
+        “哥，现在人都喜欢有文化的。你把她送去读两年书，过几年嫁出去多收点彩礼。拿彩礼钱再买个年轻漂亮的媳妇，把这残疾人扔了呗。真不知道大学生有啥稀罕的，这残疾人还是老李从火车站弄回来的，听说要上大学呢，啥也不会做。下次买新媳妇，可不要买这种废物了。”<br>
+        恶心恶心恶心！！！！<br>
+        毁了我，还想毁了我的女儿！<br>
+        我的人生全都被这样的人毁了！<br>
+        凭什么是我去死，我要活着！亲手把他送进去。</p>
+      </div>
+    </div>
+
+    <!-- 日记3 (初始隐藏) -->
+    <div id="diary3" style="display: none;">
+      <h2 class="diary-title">日记 · 叁</h2>
+      <div class="diary-content">
+        <p>好久没写过日记了，在馆长的鼓励下，我准备重拾这个习惯。<br>
+        妙妙已经长大，还长成了很优秀的孩子。我也在图书馆找到了工作。<br>
+        听民警说，李胜前两天在牢里死了，是猝死的，走得很突然，他们都没来得及送他去医院。<br>
+        死得好！下地狱去吧。<br>
+        其实我已经很满足了，从深渊里逃出来的人还能奢求什么？<br>
+        可是人可能就是贪心的吧，午夜梦回的时候，我常常想起自己平安的度过了大学生活。<br>
+        梦里爸妈也还身体健康，我们一家人都在一起。<br>
+        ……<br>
+        馆长向我展示了图书馆的秘密，我以为到这个岁数已经没有什么能吓到我了，可图书馆远比我想象的还要神秘。<br>
+        她似乎按照某种特定的顺序翻阅了那些书，我问起她，她只是神秘笑笑：<br>
+     “抬头看看我们的馆名，这没什么特别的。”<br>
+        在馆藏图书页面居然有那样的入口吗？<br>
+        她说，她可以让我的人生归位，只需要我跟她做个交易。把我的日记给她。<br>
+        看完馆长的展示，我完全不怀疑她有那样的能力。<br>
+        但这真是一次完全不平等的交易，我身上甚至没有值得她图谋的。<br>
+        要试试吗？那妙妙怎么办……</p>
+      </div>
+    </div>
+
+    <!-- 底部：页码 + 按钮 -->
+    <div class="diary-footer">
+      <span class="page-indicator" id="pageIndicator">日记 ① / ③</span>
+      <div>
+        <!-- 上一页（隐藏，不需要可忽略）但保留以防万一，默认用下一页主导 -->
+        <button class="nav-button secondary" id="prevBtn" onclick="goPrev()" style="margin-right: 1rem; display: none;">上一页</button>
+        <button class="nav-button" id="nextBtn" onclick="onNextClick()">下一页</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    © 羊皮卷宗 · 胡青云日记 · 奥林匹斯图书馆遗迹
+  </footer>
+</div>
+
+<!-- 问题验证模态框（同款登录卡样式） -->
+<div class="modal-overlay" id="questionModal">
+  <div class="question-card">
+    <h2 id="modalQuestionTitle">🔐 验证问题</h2>
+    <p id="modalQuestionText">我的家乡在哪里？</p>
+    <input type="text" id="modalAnswerInput" placeholder="请输入答案" autocomplete="off">
+    <button onclick="submitAnswer()">提交</button>
+    <p class="error-msg" id="modalErrorMsg"></p>
+    <button class="close-modal" onclick="closeQuestionModal()">关闭</button>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ---------- 日记状态 ----------
+    let currentDiary = 1;            // 1,2,3
+    const nextAction = {             // 从哪个日记 -> 需要的问题和答案
+      1: { question: '我的家乡在哪里？', answer: '云城' },
+      2: { question: '我的人生在哪一年被改变了？', answer: '1993' }  // 兼容“1993年”在验证时处理
+    };
+
+    // 日记3没有下一页动作，但按钮会变成“返回首页”
+
+    // DOM 元素
+    const diary1 = document.getElementById('diary1');
+    const diary2 = document.getElementById('diary2');
+    const diary3 = document.getElementById('diary3');
+    const pageIndicator = document.getElementById('pageIndicator');
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');  // 保留但隐藏
+
+    // 模态框相关
+    const modal = document.getElementById('questionModal');
+    const modalQuestion = document.getElementById('modalQuestionText');
+    const modalAnswer = document.getElementById('modalAnswerInput');
+    const modalError = document.getElementById('modalErrorMsg');
+    const modalTitle = document.getElementById('modalQuestionTitle');
+
+    // 临时存储当前期待的答案和来源日记
+    let expectedAnswer = '';
+    let fromDiary = 1;  // 从哪个日记触发
+
+    // 更新显示
+    function updateDiaryView() {
+      // 隐藏所有
+      diary1.style.display = 'none';
+      diary2.style.display = 'none';
+      diary3.style.display = 'none';
+      if (currentDiary === 1) diary1.style.display = 'block';
+      else if (currentDiary === 2) diary2.style.display = 'block';
+      else if (currentDiary === 3) diary3.style.display = 'block';
+
+      // 更新页码
+      const indicators = ['①', '②', '③'];
+      pageIndicator.textContent = `日记 ${indicators[currentDiary-1]} / ③`;
+
+      // 更新按钮文字 (日记3无下一页，改为“返回首页”)
+      if (currentDiary === 3) {
+        nextBtn.textContent = '返回首页';
+      } else {
+        nextBtn.textContent = '下一页';
+      }
+    }
+
+    // 打开模态框（设置问题和答案）
+    function openQuestionModal(fromDiaryIdx) {
+      const action = nextAction[fromDiaryIdx];
+      if (!action) return;
+      modalQuestion.textContent = action.question;
+      expectedAnswer = action.answer;   // 存储标准答案
+      fromDiary = fromDiaryIdx;
+      modalAnswer.value = '';
+      modalError.textContent = '';
+      modal.classList.add('show');
+    }
+
+    // 关闭模态框
+    window.closeQuestionModal = function() {
+      modal.classList.remove('show');
+    };
+
+    // 提交答案验证
+    window.submitAnswer = function() {
+      const userAnswer = modalAnswer.value.trim();
+      let correct = false;
+
+      if (fromDiary === 1) {
+        // 云城  (可能输入带空格，直接比较)
+        correct = (userAnswer === expectedAnswer);   // '云城'
+      } else if (fromDiary === 2) {
+        // 1993 或 1993年 均视为正确 (标准答案存的是'1993')
+        if (userAnswer === '1993' || userAnswer === '1993年' || userAnswer.replace('年', '') === '1993') {
+          correct = true;
+        } else {
+          // 也可能是数字1993
+          correct = (parseInt(userAnswer) === 1993);
+        }
+      }
+
+      if (correct) {
+        // 正确 -> 切换到下一日记
+        if (fromDiary === 1) {
+          currentDiary = 2;
+        } else if (fromDiary === 2) {
+          currentDiary = 3;
+        }
+        updateDiaryView();
+        closeQuestionModal();
+      } else {
+        modalError.textContent = '❌ 答案错误，无法翻开下一页。';
+      }
+    };
+
+    // 处理“下一页/返回首页”点击
+    window.onNextClick = function() {
+      if (currentDiary === 1) {
+        // 打开问题1模态框
+        openQuestionModal(1);
+      } else if (currentDiary === 2) {
+        // 打开问题2模态框
+        openQuestionModal(2);
+      } else if (currentDiary === 3) {
+        // 返回首页 (日记1)，不验证
+        currentDiary = 1;
+        updateDiaryView();
+      }
+    };
+
+    // 上一页（虽然隐藏，但简单实现直接后退无验证）
+    window.goPrev = function() {
+      if (currentDiary === 2) currentDiary = 1;
+      else if (currentDiary === 3) currentDiary = 2;
+      else currentDiary = 1;
+      updateDiaryView();
+    };
+
+    // 额外：如果用户通过其他方式进入，但保持合理
+
+    // 初始化
+    updateDiaryView();
+
+    // 点击模态框外部关闭？增加简单处理：点击overlay关闭（可选）
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) closeQuestionModal();
+    });
+
+    // 移除无关的图书馆登录逻辑，只保留日记问答
+  })();
+</script>
+
+<!-- 额外：如果误触回车提交 -->
+<script>
+  document.getElementById('modalAnswerInput')?.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      submitAnswer();
+    }
+  });
+</script>
+
+</body>
+</html>

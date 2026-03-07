@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>卡片备忘录 · 增加删除</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f6fb;
+            color: #1e293b;
+            min-height: 100vh;
+            padding: 0 0 80px 0;
+            position: relative;
+        }
+
+        /* 主标题 */
+        .app-header {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 24px 16px;
+        }
+
+        .app-header h1 {
+            font-weight: 600;
+            font-size: 2rem;
+            letter-spacing: -0.02em;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .app-header h1::before {
+            content: '📋';
+            font-size: 2rem;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        /* 卡片网格 */
+        .cards-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 8px 24px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        /* 卡片样式 */
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 20px 18px 18px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.02), 0 4px 12px rgba(0, 0, 0, 0.03);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 1px solid rgba(226, 232, 240, 0.6);
+            display: flex;
+            flex-direction: column;
+            min-height: 150px;
+            backdrop-filter: blur(2px);
+            word-break: break-word;
+            position: relative;  /* 为删除按钮提供参考 */
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 28px -8px rgba(0, 34, 64, 0.15), 0 4px 12px rgba(0, 0, 0, 0.02);
+            border-color: #cbd5e1;
+        }
+
+        .card:active {
+            transform: translateY(0);
+            transition: 0.05s;
+        }
+
+        /* 卡片预览内容区——只显示纯文本前50字 */
+        .card-preview {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #1e293b;
+            white-space: pre-wrap;
+            overflow: hidden;
+            flex: 1;
+            min-height: 4.2em;
+            max-height: 200px;
+            margin-bottom: 16px;
+            border-bottom: 1px dashed #e2e8f0;
+            padding-bottom: 12px;
+            padding-right: 28px;  /* 为删除按钮留出空间 */
+        }
+
+        /* 卡片底部装饰 */
+        .card-footer {
+            display: flex;
+            justify-content: flex-end;
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-top: auto;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .card-footer span {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #f8fafc;
+            padding: 4px 8px;
+            border-radius: 30px;
+        }
+
+        /* 卡片上的删除按钮 */
+        .card-delete-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            border-radius: 32px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            color: #64748b;
+            font-size: 1.6rem;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            z-index: 10;
+            transition: 0.15s;
+            padding: 0;
+            font-weight: 400;
+            user-select: none;
+        }
+
+        .card-delete-btn:hover {
+            background: #fee2e2;
+            color: #b91c1c;
+            border-color: #fecaca;
+            transform: scale(1.05);
+        }
+
+        .card-delete-btn:active {
+            transform: scale(0.9);
+        }
+
+        /* 右下角浮动加号按钮 */
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: #2463eb;
+            color: white;
+            border: none;
+            box-shadow: 0 10px 25px -5px rgba(36, 99, 235, 0.4), 0 4px 10px rgba(0, 0, 0, 0.1);
+            font-size: 2.8rem;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            z-index: 50;
+            outline: none;
+            user-select: none;
+            padding-bottom: 6px;
+        }
+
+        .fab:hover {
+            background: #1a4fbf;
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px -5px #2463eb66;
+        }
+
+        .fab:active {
+            transform: scale(0.95);
+        }
+
+        /* 模态框遮罩 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.2s ease;
+            padding: 16px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* 模态框内容卡片 */
+        .modal-card {
+            background: white;
+            border-radius: 36px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            padding: 32px 28px 28px;
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.96);
+            transition: transform 0.2s ease;
+            border: 1px solid #ffffff50;
+        }
+
+        .active .modal-card {
+            transform: scale(1);
+        }
+
+        .modal-card h2 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #0f172a;
+            border-bottom: 2px solid #eef2f6;
+            padding-bottom: 12px;
+        }
+
+        /* 编辑文本框 */
+        .modal-textarea {
+            width: 100%;
+            min-height: 240px;
+            padding: 20px;
+            font-size: 1rem;
+            line-height: 1.6;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            resize: vertical;
+            font-family: inherit;
+            background: #fafcff;
+            transition: 0.15s;
+            margin-bottom: 28px;
+            outline: none;
+            box-shadow: inset 0 2px 4px #00000008;
+        }
+
+        .modal-textarea:focus {
+            border-color: #2463eb;
+            box-shadow: 0 0 0 3px #2463eb20;
+            background: white;
+        }
+
+        /* 模态框按钮组 */
+        .modal-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-actions-right {
+            display: flex;
+            gap: 16px;
+        }
+
+        .modal-btn {
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: 0.15s;
+            background: white;
+            color: #334155;
+            border: 1px solid #cbd5e1;
+        }
+
+        .modal-btn.primary {
+            background: #2463eb;
+            color: white;
+            border: none;
+            box-shadow: 0 4px 12px #2463eb60;
+        }
+
+        .modal-btn.primary:hover {
+            background: #1a4fbf;
+        }
+
+        .modal-btn.secondary:hover {
+            background: #f1f5f9;
+        }
+
+        /* 危险删除按钮 */
+        .modal-btn.danger {
+            background: #ef4444;
+            color: white;
+            border: none;
+            box-shadow: 0 4px 12px #ef444460;
+        }
+
+        .modal-btn.danger:hover {
+            background: #dc2626;
+        }
+
+        /* 空状态提示 */
+        .empty-hint {
+            text-align: center;
+            padding: 60px 20px;
+            color: #94a3b8;
+            font-size: 1.2rem;
+            background: #f1f5f9;
+            border-radius: 60px;
+            grid-column: 1 / -1;
+            margin-top: 20px;
+            border: 2px dashed #cbd5e1;
+        }
+
+        /* 小点缀 */
+        .watermark {
+            position: fixed;
+            left: 20px;
+            bottom: 16px;
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* 手机适配 */
+        @media (max-width: 640px) {
+            .app-header {
+                padding: 24px 16px 8px;
+            }
+            .cards-grid {
+                padding: 8px 16px;
+                gap: 16px;
+            }
+            .fab {
+                width: 56px;
+                height: 56px;
+                font-size: 2.4rem;
+                bottom: 20px;
+                right: 20px;
+            }
+            .modal-card {
+                padding: 24px 16px;
+            }
+            .modal-btn {
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-header">
+        <h1>卡片备忘录</h1>
+    </div>
+
+    <!-- 卡片列表容器 -->
+    <div id="cardsGrid" class="cards-grid">
+        <!-- 通过js动态渲染 -->
+    </div>
+
+    <!-- 右下角加号按钮 -->
+    <button class="fab" id="addCardBtn" aria-label="新建卡片">+</button>
+
+    <!-- 编辑/详情模态框 (增加了删除按钮) -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-card" id="modalCard" onclick="event.stopPropagation()">
+            <h2>📝 编辑内容</h2>
+            <textarea class="modal-textarea" id="modalTextarea" placeholder="写点什么..."></textarea>
+            <div class="modal-actions">
+                <!-- 左侧：删除按钮 -->
+                <button class="modal-btn danger" id="deleteModalBtn">删除卡片</button>
+                <!-- 右侧：取消 & 保存 -->
+                <div class="modal-actions-right">
+                    <button class="modal-btn secondary" id="closeModalBtn">取消</button>
+                    <button class="modal-btn primary" id="saveModalBtn">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="watermark">点击卡片编辑 · 右上角×直接删除</div>
+
+    <script>
+        (function() {
+            // ---------- 数据存储 ----------
+            let cards = [];                     // 卡片数组 { id: string, content: string }
+            let currentEditId = null;            // 当前正在编辑的卡片id
+
+            const STORAGE_KEY = 'memo_cards_app';
+
+            // 工具函数：HTML转义
+            function escapeHtml(unsafe) {
+                if (!unsafe) return '';
+                return unsafe
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            }
+
+            // 生成唯一短id
+            function generateId() {
+                return Date.now() + '-' + Math.random().toString(36).substring(2, 9);
+            }
+
+            // 保存到localStorage
+            function saveToStorage() {
+                try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
+                } catch (e) {
+                    console.warn('存储失败', e);
+                }
+            }
+
+const STATE_CARD_ID = 'global-state-card-2026'; // 特殊ID
+// 根据状态添加/移除线索卡片
+function applyStateCard(state) {
+  const index = cards.findIndex(c => c.id === STATE_CARD_ID);
+  if (state === '2026') {
+    if (index === -1) {
+      cards.push({
+        id: STATE_CARD_ID,
+        content: '没想到你这么快就找到了这个通道。注意到了吗？有些东西变得不同了。我知道你还在找你的女朋友，为了完成我和她的约定，继续寻找她的踪迹吧。让我看看，你最后会做出怎样的选择。'
+      });
+    }
+  } else {
+    if (index !== -1) {
+      cards.splice(index, 1);
+    }
+  }
+}
+            // 加载初始数据
+            function loadFromStorage() {
+                const stored = localStorage.getItem(STORAGE_KEY);
+                if (stored) {
+                    try {
+                        const parsed = JSON.parse(stored);
+                        if (Array.isArray(parsed)) {
+                            cards = parsed;
+                        } else {
+                            cards = [];
+                        }
+                    } catch (e) {
+                        cards = [];
+                    }
+                } else {
+                    // 没有存储时，插入两条示例卡片
+                    cards = [
+                        {
+                            id: generateId(),
+                            content: '欢迎入职白云湖图书馆。前任管理员离职时走得匆忙，没来得及注销管理员账户，你就临时使用一下她的账户吧。ID: huqingyun123密码:qyzm19951207工作内容就像面试时候说的，每天确认馆内图书借还情况即可，很简单。一般情况下我是支持年轻人多看书的，但如果这份工作你想干久一点，就不要对馆里藏书的内容太过好奇。好了，不多说了，祝你工作愉快！'
+                        },
+                        {
+                            id: generateId(),
+                            content: '短卡片示例。'
+                        }
+                    ];
+                }
+                // 保证每个卡片对象有效
+                cards = cards.filter(c => c && typeof c === 'object').map(c => {
+                    return { id: c.id || generateId(), content: c.content || '' };
+                });
+            }
+loadFromStorage();
+const initialState = localStorage.getItem('globalTimeState') || '2022';
+applyStateCard(initialState);
+saveToStorage(); 
+renderCards();
+window.addEventListener('storage', function(e) {
+  if (e.key === 'globalTimeState') {
+    const newState = e.newValue || '2022';
+    applyStateCard(newState);
+    refreshAndSave();
+  }
+});
+
+            // ---------- 渲染卡片列表 (增加删除按钮) ----------
+            function renderCards() {
+                const container = document.getElementById('cardsGrid');
+                if (!container) return;
+
+                if (!cards || cards.length === 0) {
+                    container.innerHTML = '<div class="empty-hint">📭 还没有卡片，点击右下角加号创建</div>';
+                    return;
+                }
+
+                let htmlStr = '';
+                for (let card of cards) {
+                    const rawContent = card.content || '';
+                    // 截取前50个字
+                    let displayText = rawContent.length > 50 ? rawContent.substring(0, 50) + '…' : rawContent;
+                    const escapedDisplay = escapeHtml(displayText);
+                    const footerLabel = rawContent.trim() === '' ? '📄 空白' : '📌 笔记';
+
+                    htmlStr += `
+                        <div class="card" data-id="${escapeHtml(card.id)}">
+                            <!-- 卡片上的删除按钮 (×) -->
+                            <button class="card-delete-btn" data-id="${escapeHtml(card.id)}" aria-label="删除卡片">×</button>
+                            <div class="card-preview">${escapedDisplay || ''}</div>
+                            <div class="card-footer">
+                                <span>${footerLabel}</span>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                container.innerHTML = htmlStr;
+            }
+
+            // 完全刷新UI并保存
+            function refreshAndSave() {
+                renderCards();
+                saveToStorage();
+            }
+
+            // ---------- 模态框逻辑 ----------
+            const overlay = document.getElementById('modalOverlay');
+            const modalTextarea = document.getElementById('modalTextarea');
+            const closeBtn = document.getElementById('closeModalBtn');
+            const saveBtn = document.getElementById('saveModalBtn');
+            const deleteModalBtn = document.getElementById('deleteModalBtn');
+
+            // 打开模态框
+            function openModal(cardId) {
+                const card = cards.find(c => c.id === cardId);
+                if (!card) return;
+
+                currentEditId = cardId;
+                modalTextarea.value = card.content || '';
+                overlay.classList.add('active');
+                setTimeout(() => modalTextarea.focus(), 100);
+            }
+
+            // 关闭模态框
+            function closeModal() {
+                overlay.classList.remove('active');
+                currentEditId = null;
+            }
+
+            // 保存编辑
+            function saveCurrentEdit() {
+                if (!currentEditId) return;
+
+                const newContent = modalTextarea.value ?? '';
+                const index = cards.findIndex(c => c.id === currentEditId);
+                if (index !== -1) {
+                    cards[index].content = newContent;
+                    refreshAndSave();
+                }
+                closeModal();
+            }
+
+            // ---------- 事件绑定 ----------
+
+            const grid = document.getElementById('cardsGrid');
+
+            // 网格事件代理 (处理卡片点击 和 卡片删除按钮)
+            if (grid) {
+                grid.addEventListener('click', (e) => {
+                    // 1. 检查是否点击了卡片上的删除按钮 (×)
+                    const deleteBtn = e.target.closest('.card-delete-btn');
+                    if (deleteBtn) {
+                        e.stopPropagation();   // 防止触发卡片点击
+                        e.preventDefault();
+                        const cardId = deleteBtn.getAttribute('data-id');
+                        if (cardId && confirm('确定要删除这张卡片吗？')) {
+                            cards = cards.filter(c => c.id !== cardId);
+                            refreshAndSave();
+                            // 如果当前打开的模态框正好是这个卡片，关闭它
+                            if (currentEditId === cardId) {
+                                closeModal();
+                            }
+                        }
+                        return; // 不再执行卡片打开逻辑
+                    }
+
+                    // 2. 否则处理卡片点击 (打开模态框)
+                    const cardElement = e.target.closest('.card');
+                    if (!cardElement) return;
+                    const cardId = cardElement.getAttribute('data-id');
+                    if (cardId) {
+                        openModal(cardId);
+                    }
+                });
+            }
+
+            // 加号按钮: 新建空白卡片
+            document.getElementById('addCardBtn').addEventListener('click', () => {
+                const newCard = {
+                    id: generateId(),
+                    content: ''
+                };
+                cards.push(newCard);
+                refreshAndSave();
+            });
+
+            // 模态框内按钮
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closeModal);
+            }
+
+            if (saveBtn) {
+                saveBtn.addEventListener('click', saveCurrentEdit);
+            }
+
+            // 模态框内删除按钮
+            if (deleteModalBtn) {
+                deleteModalBtn.addEventListener('click', () => {
+                    if (!currentEditId) return;
+                    if (confirm('确认删除这张卡片？')) {
+                        cards = cards.filter(c => c.id !== currentEditId);
+                        refreshAndSave();
+                        closeModal();
+                    }
+                });
+            }
+
+            // 点击遮罩关闭
+            if (overlay) {
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) {
+                        closeModal();
+                    }
+                });
+            }
+
+            // 键盘ESC关闭
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && overlay.classList.contains('active')) {
+                    closeModal();
+                }
+            });
+
+     })();     
+    </script>
+</body>
+</html>

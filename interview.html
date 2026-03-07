@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>搜客浏览器 · 专访</title>
+  <style>
+    /* ===== 全局重置 & 字体 (复用首页样式) ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+      background: #e3e9f2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 20px;
+    }
+
+    /* ===== 主浏览器窗口 ===== */
+    .browser-window {
+      width: 1100px;
+      max-width: 100%;
+      height: 780px;
+      background: #ffffff;
+      border-radius: 20px 20px 12px 12px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.3);
+      backdrop-filter: blur(2px);
+    }
+
+    /* ===== 浏览器顶部栏 (完全复用首页样式) ===== */
+    .browser-top-bar {
+      background: #f0f3f8;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #d0d9e6;
+      flex-shrink: 0;
+    }
+
+    .window-controls {
+      display: flex;
+      gap: 8px;
+      margin-right: 6px;
+    }
+    .win-btn {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #ddd;
+    }
+    .win-btn.red { background: #ff5f5a; }
+    .win-btn.yellow { background: #ffbe2e; }
+    .win-btn.green { background: #2aca44; }
+
+    .top-logo {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    .top-logo svg {
+      width: 32px;
+      height: 32px;
+      filter: drop-shadow(0 2px 4px rgba(45, 85, 120, 0.25));
+      transition: transform 0.1s ease;
+    }
+    .top-logo svg:hover {
+      transform: scale(1.02);
+    }
+
+    .address-bar {
+      flex: 1;
+      background: white;
+      border-radius: 30px;
+      padding: 8px 18px;
+      font-size: 0.95rem;
+      color: #1a2639;
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+      border: 1px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: 0.3px;
+    }
+    .address-bar span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .address-bar::before {
+      content: "🔒";
+      margin-right: 8px;
+      font-size: 1rem;
+      opacity: 0.8;
+    }
+
+    .time-display {
+      background: #e5e9f0;
+      padding: 6px 16px;
+      border-radius: 40px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #1e2b3c;
+      border: 1px solid #bac8dc;
+      box-shadow: inset 0 1px 2px white, 0 1px 2px rgba(0,0,0,0.05);
+      letter-spacing: 0.8px;
+    }
+
+    /* ===== 内容区域 ===== */
+    .content-panel {
+      flex: 1;
+      background: #f7f9fc;
+      padding: 24px 32px;
+      overflow-y: auto;
+    }
+
+    /* 新闻卡片样式 */
+    .news-article {
+      max-width: 860px;
+      margin: 20px auto;
+      background: white;
+      border-radius: 32px;
+      box-shadow: 0 12px 28px -8px rgba(45, 75, 110, 0.2);
+      padding: 40px 48px;
+      border: 1px solid rgba(255,255,255,0.7);
+    }
+
+    .news-title {
+      font-size: 2.8rem;
+      font-weight: 500;
+      color: #102a4c;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      border-left: 8px solid #4a7db5;
+      padding-left: 24px;
+    }
+
+    .news-meta {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 32px;
+      color: #5f6f84;
+      border-bottom: 1px dashed #ccd9e9;
+      padding-bottom: 16px;
+    }
+    .news-author {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: #4a7db5;
+      background: #e8f0fe;
+      padding: 6px 18px;
+      border-radius: 40px;
+    }
+    .news-date {
+      font-size: 1rem;
+      color: #6f7c91;
+    }
+
+    .news-content {
+      font-size: 1.2rem;
+      line-height: 1.8;
+      color: #203a58;
+    }
+    .news-content p {
+      margin: 1.5em 0;
+    }
+    .news-content strong {
+      color: #4a7db5;
+      font-weight: 600;
+    }
+    .quote {
+      background: #f2f7ff;
+      padding: 24px 28px;
+      border-radius: 40px;
+      margin: 32px 0;
+      font-style: italic;
+      border-left: 6px solid #4a7db5;
+      color: #1d3e6b;
+      font-size: 1.2rem;
+    }
+    .foundation-badge {
+      background: linear-gradient(145deg, #e7d9ff, #d4c2ff);
+      border-radius: 60px;
+      padding: 16px 28px;
+      display: inline-block;
+      margin: 20px 0;
+      font-weight: 600;
+      color: #2b1b4e;
+      box-shadow: 0 6px 14px rgba(100, 70, 180, 0.15);
+    }
+    hr {
+      border: none;
+      border-top: 2px solid #d0ddee;
+      margin: 30px 0;
+    }
+    .social-hint {
+      background: #fdf6e3;
+      border-radius: 40px;
+      padding: 16px 24px;
+      color: #7d5d23;
+      font-size: 1.1rem;
+    }
+  </style>
+</head>
+<body>
+<div class="browser-window">
+  <!-- 顶部栏（与首页完全一致，点击logo返回首页） -->
+  <div class="browser-top-bar">
+    <div class="window-controls">
+      <div class="win-btn red"></div>
+      <div class="win-btn yellow"></div>
+      <div class="win-btn green"></div>
+    </div>
+    <!-- 点击logo返回首页（index.html） -->
+    <a href="index.html" style="text-decoration: none; display: flex;" class="top-logo" id="homeLogo">
+      <svg viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="45" fill="#4a7db5"/>
+        <defs>
+          <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#6ea8ff"/>
+            <stop offset="100%" stop-color="#ffffff"/>
+          </linearGradient>
+        </defs>
+        <path d="M30 60 Q35 45 50 50 Q55 35 70 45 Q85 45 80 60 Z" fill="url(#grad)"/>
+      </svg>
+    </a>
+    <!-- 地址栏固定显示当前页面 -->
+    <div class="address-bar" id="addressBar">
+      <span id="addressText">搜客浏览器 / 专访 · 胡青云</span>
+    </div>
+    <!-- 右上角时间不变 -->
+    <div class="time-display">2022年</div>
+  </div>
+
+  <!-- 内容区域：新闻专访 -->
+  <div class="content-panel">
+    <article class="news-article">
+      <h1 class="news-title">她的另一面——你不知道的胡青云</h1>
+      <div class="news-meta">
+        <span class="news-author">✍️ 飓风新闻</span>
+        <span class="news-date">📅 2022年3月8日</span>
+      </div>
+
+      <div class="news-content">
+        <p><strong>谈及这位伟大的科学家，很多人的第一反应是对这位女性潜心科研、未曾生育的敬佩。</strong> 但很少有人知道，胡青云教授在潜心科研的同时，一直默默关注着社会问题。近日，她接受本刊专访，首次详细谈及自己的成长之路，以及她发起的“归途”基金会。</p>
+
+        <div class="quote">
+          “走到现在，我仍不敢相信自己如此的幸运。可越是这样，我越是发掘，还有无数的人在泥沼中苦苦挣扎。即使脱离泥沼，也对现在的社会感到手足无措。我也曾有过这样的感觉，甚至为此失去了我所珍视的。因此我希望可以帮助一些人走出痛苦。”
+        </div>
+
+        <p>胡青云的科研之路并非一帆风顺。早年赴海外攻读博士时，她曾因实验屡次失败而濒临放弃，但导师的一句“材料的结构可以被破坏，也可以被重建，人生亦然”让她坚持了下来。回国后，她带领团队在高分子材料领域取得多项突破，成为国家重点实验室副主任。</p>
+
+        <p><strong>2019年，胡青云将自己多年积蓄与部分专利收益作为启动资金，成立了“归途”基金会。</strong> 该基金会致力于为被拐的妇女儿童提供法律援助、心理辅导及职业培训，帮助她们重新融入社会。截至目前，已累计帮助超过100名女性获得新生，其中有人重返校园，有人成为技术工人，还有人开始创业。</p>
+
+        <div class="foundation-badge">
+          🌟 “归途”基金会 · 让她有路可退
+        </div>
+
+        <p>除了公益事业，胡青云还有一个令人印象深刻的习惯：她在所有社交平台都使用完全一致的账号名——<strong>@huqingyun123</strong>。“这不仅是为了让同事和学生容易找到我，更是希望传递一种信号：无论线上还是线下，我都愿意以真实、一贯的面貌出现。”她笑称，这个习惯曾让不少试图冒充她的人无从下手。</p>
+
+        <p>采访尾声，胡青云对年轻女性研究者寄语：“不要给自己设限，实验室里的瓶瓶罐罐和社会的复杂问题都需要韧性。如果有一天你感到无助，请记住，结构可以被打破，但信念可以重建。”</p>
+
+        <hr>
+        <p style="font-size: 1rem; color: #64748b;">* 本文为飓风新闻独家专访，未经许可不得转载。</p>
+      </div>
+    </article>
+  </div>
+</div>
+</body>
+</html>
