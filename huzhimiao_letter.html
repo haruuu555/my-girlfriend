@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>胡致妙 · 遗信 · 奥林匹斯图书馆</title>
+  <style>
+    /* ===== 古典羊皮纸风格 · 与图书馆完全一致 ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Georgia', 'Times New Roman', '宋体', serif;
+      background: #2b1e14;  /* 深木质底 */
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(100, 70, 40, 0.2) 0%, transparent 30%),
+        repeating-linear-gradient(45deg, rgba(70, 50, 30, 0.1) 0px, rgba(70, 50, 30, 0.1) 2px, transparent 2px, transparent 6px);
+      min-height: 100vh;
+      color: #3e2e21;
+      line-height: 1.6;
+    }
+
+    .main-wrapper {
+      max-width: 1000px;
+      margin: 1.5rem auto 2rem;
+      background: #f7efe0;
+      background-image: 
+        linear-gradient(165deg, #e8dccc 0%, #faf1e2 80%),
+        repeating-linear-gradient(0deg, #d6c8b8 0px, #d6c8b8 1px, transparent 1px, transparent 6px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 0 1px #ac9b86 inset, 0 0 0 2px #dacbb8 inset;
+      border-radius: 28px 28px 16px 16px;
+      padding: 1rem 2rem 3rem 2rem;
+    }
+
+    /* 顶部导航 — 深色木纹（与图书馆完全一致） */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 2rem;
+      background: #341f12;
+      background-image: linear-gradient(145deg, #3e2a1b, #2c1b0f);
+      border-radius: 60px 60px 20px 20px;
+      box-shadow: 0 8px 0 #1f130a, 0 10px 20px rgba(0,0,0,0.3);
+      border-bottom: 2px solid #b4966b;
+      margin-bottom: 2.2rem;
+    }
+
+    .logo {
+      font-size: 1.9rem;
+      font-weight: 500;
+      color: #ebd7b8;
+      text-shadow: 2px 2px 0 #3f2b18, 3px 3px 0 #00000030;
+      letter-spacing: 3px;
+      font-family: 'Cinzel', 'Georgia', serif;
+      transition: 0.2s;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .logo:hover {
+      color: #f7e7c8;
+      text-shadow: 2px 2px 0 #5f4026;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    /* 静态文字，保留氛围 */
+    .nav-links span {
+      color: #e2cfb3;
+      font-size: 1.15rem;
+      font-weight: 400;
+      padding: 0.5rem 0.2rem;
+      border-bottom: 2px solid transparent;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-family: 'Cinzel', serif;
+      cursor: default;
+      opacity: 0.9;
+    }
+
+    .back-link a {
+      background: #5f462b;
+      padding: 0.5rem 1.8rem;
+      border-radius: 40px;
+      font-size: 1rem;
+      color: #ecdbba;
+      border: 1px solid #b29265;
+      box-shadow: inset 0 1px 3px #ffefd1, 0 4px 0 #362415;
+      text-decoration: none;
+      transition: 0.1s ease;
+      font-family: 'Cinzel', serif;
+      letter-spacing: 1px;
+      display: inline-block;
+    }
+
+    .back-link a:hover {
+      background: #6e5438;
+      transform: translateY(-1px);
+      box-shadow: inset 0 1px 4px #ffeac5, 0 5px 0 #3d2c1a;
+    }
+
+    /* 信纸卡片 — 更柔软的羊皮卷 */
+    .letter-card {
+      background: #eadbc5;
+      background: linear-gradient(145deg, #f3e8d8, #e0d0b8);
+      border-radius: 48px 16px 48px 16px;
+      padding: 3rem 3.2rem;
+      box-shadow: 8px 14px 20px -8px #4a3a28, inset 1px 1px 0 #fff9ed, inset 0 0 0 2px #f2e3ce;
+      border: 1px solid #b89d7a;
+      margin: 1.5rem 0 2.5rem 0;
+      position: relative;
+    }
+
+    /* 火漆印章装饰 */
+    .letter-card::before {
+      content: "✧";
+      font-size: 2.2rem;
+      color: #9e7a5c;
+      position: absolute;
+      top: 20px;
+      right: 35px;
+      opacity: 0.3;
+      transform: rotate(15deg);
+      text-shadow: 2px 2px 2px #3f2e1b;
+    }
+
+    .letter-card::after {
+      content: "⚘";
+      font-size: 2.5rem;
+      color: #b2825a;
+      position: absolute;
+      bottom: 20px;
+      left: 30px;
+      opacity: 0.2;
+      transform: rotate(-10deg);
+    }
+
+    .letter-title {
+      font-size: 2.2rem;
+      font-weight: 400;
+      color: #352918;
+      border-left: 8px solid #a57c54;
+      padding-left: 1.8rem;
+      margin-bottom: 2.5rem;
+      font-family: 'Cinzel', serif;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+    }
+
+    .letter-sub {
+      text-align: right;
+      font-size: 1.2rem;
+      color: #7b6242;
+      margin-top: -1.5rem;
+      margin-bottom: 2rem;
+      font-style: italic;
+      border-bottom: 1px dashed #c5a67b;
+      padding-bottom: 0.8rem;
+    }
+
+    .letter-content {
+      font-size: 1.1rem;
+      color: #2f2419;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: 'Georgia', serif;
+      line-height: 1.9;
+      padding: 0 0.8rem;
+    }
+
+    .letter-content p {
+      margin-bottom: 1.4rem;
+      text-indent: 2em;
+    }
+
+    .letter-content p:first-of-type {
+      text-indent: 0;
+    }
+
+    .letter-signature {
+      margin-top: 2.8rem;
+      text-align: right;
+      font-size: 1.3rem;
+      font-family: 'Cinzel', serif;
+      color: #4f3c25;
+      border-top: 2px dotted #b89b75;
+      padding-top: 1.8rem;
+      letter-spacing: 1px;
+    }
+
+    .letter-signature span {
+      font-size: 1rem;
+      color: #7f684b;
+      display: block;
+      font-style: italic;
+      margin-top: 0.3rem;
+    }
+
+    /* 图书馆注脚 */
+    .library-note {
+      background: #d8cbb2;
+      padding: 1rem 2rem;
+      border-radius: 60px 12px 60px 12px;
+      text-align: center;
+      color: #3a2b1b;
+      font-style: italic;
+      border: 1px solid #b28f63;
+      box-shadow: inset 0 0 0 2px #efe2cf;
+      margin: 2rem 0 1rem;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .library-note:hover {
+      background: #cfbea2;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 2rem;
+      padding: 1.5rem;
+      color: #b7a386;
+      border-top: 2px solid #bc9e78;
+      font-style: italic;
+    }
+
+    /* ---------- 模态框 (与图书馆完全同款) ---------- */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(20, 12, 5, 0.7);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.2s;
+    }
+
+    .modal-overlay.show {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .login-card {
+      background: #f2e3cf;
+      background: linear-gradient(145deg, #f8edd9, #e3d1b5);
+      padding: 2.5rem 3rem;
+      border-radius: 60px 16px 60px 16px;
+      border: 4px solid #b49161;
+      box-shadow: 0 25px 40px #1f140b, inset 0 1px 5px #fff7e6;
+      width: 500px;
+      max-width: 90%;
+      text-align: center;
+    }
+
+    .login-card h2 {
+      font-size: 2rem;
+      color: #3f2b16;
+      margin-bottom: 1.8rem;
+      font-family: 'Cinzel', serif;
+      border-left: none;
+      padding-left: 0;
+    }
+
+    .login-card p {
+      font-size: 1.1rem;
+      color: #4a3521;
+      margin-bottom: 1.8rem;
+      line-height: 1.6;
+    }
+
+    .choice-buttons {
+      display: flex;
+      gap: 1.2rem;
+      justify-content: center;
+      margin: 2rem 0 1rem;
+      flex-wrap: wrap;
+    }
+
+    .modal-choice-btn {
+      background: #866b48;
+      border: none;
+      color: #faead3;
+      padding: 0.8rem 2rem;
+      border-radius: 50px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      border-bottom: 4px solid #543f28;
+      transition: 0.1s;
+      font-family: 'Cinzel', serif;
+      letter-spacing: 1px;
+      min-width: 140px;
+    }
+
+    .modal-choice-btn:hover {
+      background: #9f825d;
+      transform: translateY(-1px);
+      border-bottom-width: 5px;
+    }
+
+    .close-modal {
+      margin-top: 1.2rem;
+      background: none;
+      border: none;
+      color: #7b613f;
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 1rem;
+      font-family: 'Georgia', serif;
+    }
+
+    .ending-text {
+      background: #faf0df;
+      padding: 1.2rem 1.5rem;
+      border-radius: 30px 8px 30px 8px;
+      border: 1px solid #c7a87b;
+      font-style: italic;
+      color: #3d2d1b;
+      box-shadow: inset 0 0 0 1px #fff2de;
+      margin: 1rem 0 1.8rem;
+      text-align: left;
+    }
+
+    /* 响应式 */
+    @media (max-width: 650px) {
+      .main-wrapper { padding: 1rem 1.2rem; }
+      .letter-card { padding: 2rem 1.5rem; }
+      .logo { font-size: 1.5rem; }
+      .login-card { padding: 1.8rem; }
+      .choice-buttons { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<div class="main-wrapper">
+  <!-- 导航栏 — 真实返回链接 + 静态文字装饰 -->
+  <header class="navbar">
+    <a href="library.html" class="logo" title="返回奥林匹斯图书馆">🏛 奥林匹斯图书馆</a>
+    <nav class="nav-links">
+      <span>羊皮卷宗 · 时间回廊</span>
+    </nav>
+    <div class="back-link">
+      <a href="library.html">📖 返回图书馆</a>
+    </div>
+  </header>
+
+  <!-- 信件主体 -->
+  <section class="letter-card">
+    <h2 class="letter-title">✉️ 胡致妙 · 一封遗信</h2>
+    <div class="letter-sub">—— 写于时间混乱的图书馆深处</div>
+    
+    <div class="letter-content">
+      <p>这是留给我最深爱的两个人的一封信，可惜大概永远不会有人打开了。</p>
+      <p>这不是我第一次来图书馆了，但还是头一回见到馆长。</p>
+      <p>不过她一上来这个问题可把我吓了一跳，我愿意从这个世界上消失吗？</p>
+      <p>活了三十年，也见过了不少人，还是第一次有人这样向我发问。</p>
+      <p>当时我还挺恼怒的，毕竟谁也不想被这样捉弄吧。</p>
+      <p>但她很认真的又问我，</p>
+      <p>“如果你的母亲可以避开过去的不幸，你愿意消失吗？”</p>
+      <p>我应该是愿意的吧，我这么想着，也这么回答了她。</p>
+      <p>在我印象里，母亲的手总是颤颤巍巍地，腿脚也不利索，五十岁出头头发就几近全白。</p>
+      <p>可她聪明又好学，跟山沟沟里的人格格不入。</p>
+      <p>小时候我不懂为什么，长大了些才明白这意味着什么。</p>
+      <p>这个世界对我的妈妈好残忍，有时候我宁愿自己没有出生。</p>
+      <p>可是馆长真的能改变过去吗，真是不可置信。</p>
+      <p>我和馆长又聊了很多，我心里顾虑也被一一消除。</p>
+      <p>太好了，我消失的话，别人对我的记忆也会被抹除呀。</p>
+      <p>我松了口气的同时，又有些难过，时茵也会忘了我。</p>
+      <p>她不会被我的消失困住，可我的私心希望她不会有其他爱人。</p>
+      <p>我真是个小气鬼，都要消失了，还想这想那的。</p>
+      <p>馆长说，图书馆的时间是混乱的，在这里还会留下我的痕迹。</p>
+      <p>抱着也许能留下的心态，我写下了这封信。</p>
+      <p>这是我曾经作为胡青云的女儿、陈时茵的爱人的证明。</p>
+      <p>然后呢，希望她们都能过上更幸福的日子。</p>
+      <p>再见啦。</p>
+    </div>
+
+    <div class="letter-signature">
+      胡致妙 <span>于时间夹缝 · 最后一笔</span>
+    </div>
+  </section>
+
+  <!-- 图书馆独有的神秘注脚 -->
+  <div class="library-note" id="libraryNote">
+  「在此处写下的文字，会永远漂流于时间的褶皱中。」
+  </div>
+
+  <footer class="footer">
+    © 奥林匹斯图书馆 · 羊皮纸卷 
+  </footer>
+</div>
+
+<!-- 滚动到底部弹出的抉择模态框 -->
+<div class="modal-overlay" id="scrollModal">
+  <div class="login-card" id="modalCard">
+    <h2>📜 你已读至信末</h2>
+    <div id="modalContent">
+      <p>很抱歉，时间总是如此无情。你的爱人和她未遭遇痛苦的母亲注定不能共存。但是得到理想生活的母亲心中，女儿依旧是她的心病。</p>
+        <p>所以我又达成了新的交易，这次的选择权在你手上。<p>   
+        <p>选择接受，你的爱人将永远迷失；选择拒绝，你的爱人将回归。<p> 
+        <p>那个“女科学家”也会彻底消失。所以，你的选择是？ <p>
+      <div class="choice-buttons">
+        <button class="modal-choice-btn" id="choiceAccept">接受交易</button>
+        <button class="modal-choice-btn" id="choiceReject">拒绝交易</button>
+      </div>
+    </div>
+    <button class="close-modal" id="closeModalBtn">关闭</button>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ---------- 滚动到底部弹出逻辑 ----------
+    const modal = document.getElementById('scrollModal');
+    const modalContent = document.getElementById('modalContent');
+    const closeBtn = document.getElementById('closeModalBtn');
+    let modalShown = false;          // 是否已经弹出（避免重复弹出）
+    let choiceMade = false;          // 是否已做出选择（用于关闭后重置）
+
+    // 结局文本
+    const endingAccept = `
+      <div class="ending-text">
+        <p style="margin-bottom: 0.8rem;"><strong> 结局：她不在的时空</strong></p>
+        <p>你选择了接受馆长的交易。胡致妙没有回来，甚至没有人知道你曾经有个女朋友。胡教授的履历依然如此耀眼——她接受着所有人的爱戴，她的成就足以在历史中留下痕迹。她的双手不再颤抖，头发也未曾早白。</p>
+        <p>她身边没有孩子，只有一只叫“喵喵”的小猫。馆长曾问过她要不要彻底遗忘，她只是坚定地摇了摇头。</p>
+        <p>你成为了图书馆的正式管理员，也许在这个奇妙的地方，你和过去的爱人翻开了同一本书。</p>
+      </div>
+    `;
+
+    const endingReject = `
+      <div class="ending-text">
+        <p style="margin-bottom: 0.8rem;"><strong>结局：她的再出发</strong></p>
+        <p>你拒绝了交易，你只想要你的爱人回到你身边，无论怎样都好。</p>
+        <p>再睁开眼，一切好像都没发生过，闹钟响起，你的爱人还在抱怨今天好冷，不想上班。</p>
+        <p>她什么也不记得了。但有另一个人记得。</p>
+         <p>你再一次听到胡青云的名字，是爱人兴高采烈地告诉你，妈妈决定去国外进修了。</p>
+        <p>太好了，你心里想。好在这位命运多舛的女士，还有时间可以再出发。</p>
+
+      </div>
+    `;
+
+    // 显示模态框并重置为选择界面
+    function showModal() {
+      if (modalShown) return;
+      // 重置内容到初始选项
+      modalContent.innerHTML = `
+          <p>很抱歉，时间总是如此无情。你的爱人和她未遭遇痛苦的母亲注定不能共存。但是得到理想生活的母亲心中，女儿依旧是她的心病。</p>
+        <p>所以我又达成了新的交易，这次的选择权在你手上。<p>   
+        <p>选择接受，你的爱人将永远迷失；选择拒绝，你的爱人将回归。<p> 
+        <p>那个“女科学家”也会彻底消失。所以，你的选择是？ <p>
+
+        <div class="choice-buttons">
+          <button class="modal-choice-btn" id="choiceAccept">接受交易</button>
+          <button class="modal-choice-btn" id="choiceReject">拒绝交易</button>
+        </div>
+      `;
+      choiceMade = false;
+      // 重新绑定按钮事件
+      document.getElementById('choiceAccept').addEventListener('click', handleAccept);
+      document.getElementById('choiceReject').addEventListener('click', handleReject);
+      
+      modal.classList.add('show');
+      modalShown = true;
+    }
+
+    function closeModal() {
+      modal.classList.remove('show');
+      modalShown = false;   // 允许再次滚动到底部重新弹出
+    }
+
+    // 处理接受
+    function handleAccept() {
+      if (choiceMade) return;
+      modalContent.innerHTML = endingAccept;
+      choiceMade = true;
+    }
+
+    // 处理拒绝
+    function handleReject() {
+      if (choiceMade) return;
+      modalContent.innerHTML = endingReject;
+      choiceMade = true;
+    }
+
+    // 监听关闭按钮
+    closeBtn.addEventListener('click', closeModal);
+
+    // 点击模态框背景也可关闭（可选）
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) closeModal();
+    });
+
+    // 监听滚动事件，判断是否到达底部
+    function checkScrollBottom() {
+      // 如果已经显示模态框，不再触发
+      if (modalShown) return;
+
+      const scrollY = window.scrollY || window.pageYOffset;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+
+      // 当距离底部小于 50px 时触发
+      if (documentHeight - (scrollY + windowHeight) < 50) {
+        showModal();
+      }
+    }
+
+    // 使用防抖优化滚动性能
+    let scrollTimeout;
+    window.addEventListener('scroll', function() {
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(checkScrollBottom, 100);
+    });
+
+    // 注脚点击氛围（保留原有的馆长语录）
+    document.getElementById('libraryNote').addEventListener('click', function() {
+      alert('“时间从不流逝，它只是折叠。” —— 馆长');
+    });
+
+    // 如果用户手动关闭后再次滚动到底部，可以重新弹出
+  })();
+</script>
+</body>
+</html>
