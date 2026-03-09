@@ -606,7 +606,7 @@
             <div class="hero-banner">
                 <div class="hero-text">
                     <h2>欢迎新同学 🌟</h2>
-                    <p>2025年秋季招生已启动 · 实验中学等你来</p>
+                    <p>2022年秋季招生已启动 · 实验中学等你来</p>
                 </div>
                 <button class="hero-btn"><i class="fas fa-calendar-alt"></i> 预约参观</button>
             </div>
@@ -620,7 +620,7 @@
                             <span class="badge">新</span>
                         </div>
                         <div class="card-body">
-                            <p><i class="fas fa-chevron-circle-right icon-purple"></i> 关于2025年清明节放假安排：4月4日-6日休息，7日正常上课。</p>
+                            <p><i class="fas fa-chevron-circle-right icon-purple"></i> 关于2022年清明节放假安排：4月4日-6日休息，7日正常上课。</p>
                             <p style="color: var(--primary-purple);">—— 教务处 3.28</p>
                         </div>
                     </div>
@@ -652,7 +652,7 @@
             <div class="about-grid">
                 <div class="about-text">
                     <h3><i class="fas fa-rainbow" style="margin-right: 12px;"></i> 子安市实验中学 · 学府底蕴</h3>
-                    <p>子安市实验中学创建于1998年，是省级示范性重点中学。学校占地180亩，现有教职工260人，其中特级教师18人，市级学科带头人42人。紫色校徽象征典雅、创新与勇气。</p>
+                    <p>子安市实验中学创建于1978年，是省级示范性重点中学。学校占地180亩，现有教职工260人，其中特级教师18人，市级学科带头人42人。紫色校徽象征典雅、创新与勇气。</p>
                     <p>办学理念：<strong>“让每一个生命都绽放”</strong>。学校开设科创、艺术、国际课程等30余个社团，并与多所高校建立优质生源基地。</p>
                     <p>近年高考一本上线率稳定在78%以上，先后荣获“全国文明校园”“省教育科研先进单位”等称号。</p>
                     <div class="highlight-stats">
@@ -677,7 +677,7 @@
 
         <div id="forum" class="page">
             <div class="forum-header">
-                <h2><i class="fas fa-comments" style="color: var(--primary-purple);"></i> 校园论坛 · 实验茶话</h2>
+                <h2><i class="fas fa-comments" style="color: var(--primary-purple);"></i> 校园论坛 ·</h2>
             </div>
 
             <div id="post-list-container" class="post-list"></div>
@@ -719,52 +719,90 @@
                 });
             });
 
-            // 论坛数据 - 置顶帖 + 两个正常帖 + 一个极度乱码帖（仅可辨识几个词）
-            const forumPosts = [
-                {
-                    title: '【置顶】重要公告：论坛即将停止运营',
-                    author: '系统管理员',
-                    content: '亲爱的同学们、老师们：由于学校官方网站升级，校园论坛将于2025年5月1日起正式停止运营。感谢大家多年来的陪伴与支持。后续交流请移步学校企业微信。',
-                    isSticky: true,
+            // ---------- 新增：安全读取 localStorage ----------
+            function safeGetItem(key, defaultValue) {
+                try {
+                    const value = localStorage.getItem(key);
+                    return value !== null ? value : defaultValue;
+                } catch (e) {
+                    console.warn('localStorage 读取失败，使用默认值', e);
+                    return defaultValue;
+                }
+            }
+
+            // ---------- 根据状态返回论坛帖子数组 ----------
+            function getForumPosts(state) {
+                // 前三个固定帖子
+                const basePosts = [
+                    {
+                        title: '【置顶】重要公告：论坛即将停止运营',
+                        author: '系统管理员',
+                        content: '亲爱的同学们、老师们：由于学校官方网站升级，校园论坛将于2021年1月1日起正式停止运营。感谢大家多年来的陪伴与支持。后续交流请移步学校企业微信。',
+                        isSticky: true,
+                        replies: [
+                            { author: '我怀念的', content: '啊？好可惜，这里有很多回忆……', time: '2020年12月3日', likes: 45 },
+                            { author: '技术组', content: '同学们不用担心，帖子都会保存，只是不再支持新用户注册。', time: '2020年12月3日', likes: 32 },
+                            { author: '你们开挂吗', content: '以后去哪里找学习资料啊？', time: '2020年12月3日', likes: 18 }
+                        ]
+                    },
+                    {
+                        title: '【求助】新生宿舍有独立卫浴吗？',
+                        author: '新生小杨',
+                        content: '各位学长学姐好！我是今年高一新生，想问问咱们学校的宿舍条件怎么样？有没有独立卫浴和空调？晚上会断电吗？谢谢解答！',
+                        replies: [
+                            { author: '宿管老师', content: '同学你好，所有宿舍都是独立卫浴+空调，晚上11点熄灯但不断电，插座有电。', time: '2015年8月19日', likes: 12 },
+                            { author: '学姐a', content: '你来对学校了，咱学校就宿舍好。', time: '2015年8月19日', likes: 8 },
+                            { author: '热心同学', content: '补充一下，每层还有公共洗衣机和饮水机，很方便～', time: '2015年8月19日', likes: 5 }
+                        ]
+                    },
+                    {
+                        title: '美食节来啦！本周五中午食堂前广场',
+                        author: '学生会宣传部',
+                        content: '🎉 一年一度的校园美食节将于本周五中午11:30在食堂前广场举行！今年有15个摊位：章鱼烧、冰糖葫芦、紫薯糕、钵钵鸡……还有学生会准备的抽奖活动！欢迎全校师生参加！',
+                        replies: [
+                            { author: '火锅重度依赖', content: '哇，期待！去年美食节我就吃到了超好吃的炸鲜奶，今年一定要早点去！', time: '2019年9月3日', likes: 23 },
+                            { author: '学生会', content: '回复火锅重度依赖：今年还会有神秘甜品哦，记得来抽奖！', time: '2019年9月3日', likes: 10 },
+                            { author: '我被学习吸干了', content: '高三党也要放松一下，到时候一定去凑热闹！', time: '2019年9月3日', likes: 7 },
+                            { author: '食堂阿姨', content: '我们食堂也会推出特价菜，欢迎大家～', time: '2019年9月3日', likes: 14 }
+                        ]
+                    }
+                ];
+
+                // 状态为2026时显示的正常帖子
+                const normalPost = {
+                    title: '怎么办，校门口有个不认识的男的在撒泼',
+                    author: '匿名',
+                    content: '怎么办啊大家，lz今天只是放学后在校门口买关东煮，就碰到这个男的说什么找女儿，在那又嚎又叫，问他女儿叫什么名字也说不清楚，什么妙妙脆脆的，他女儿是妙脆角啊。',
                     replies: [
-                        { author: '高三学姐', content: '啊？好可惜，这里有很多回忆……', time: '今天 10:15', likes: 45 },
-                        { author: '技术组', content: '数据备份将持续到4月底，有需要的同学请及时保存。', time: '今天 11:02', likes: 32 },
-                        { author: '高二学弟', content: '以后去哪里找学习资料啊？', time: '今天 11:30', likes: 18 }
+                        { author: '不吃香菜', content: '我好像有所耳闻，不过这个妙妙……好像是我同学。啧啧啧，不好说', time: '2011年11月3日', likes: 12 },
+                        { author: '克莱尔', content: '不知道怎么回事，莫名其妙的', time: '2011年11月3日', likes: 8 },
+                       { author: '我是皇帝', content: '什么情况，不知道的不要乱说好吗。', time: '2011年11月3日', likes: 8 }  
                     ]
-                },
-                {
-                    title: '【求助】新生宿舍有独立卫浴吗？',
-                    author: '新生小杨',
-                    content: '各位学长学姐好！我是今年高一新生，想问问咱们学校的宿舍条件怎么样？有没有独立卫浴和空调？晚上会断电吗？谢谢解答！',
-                    replies: [
-                        { author: '宿管老师', content: '同学你好，所有宿舍都是独立卫浴+空调，晚上11点熄灯但不断电，插座有电。', time: '昨天 20:14', likes: 12 },
-                        { author: '大三学姐', content: '紫竹苑是独立卫浴，其他楼也是今年刚翻新的，环境不错。欢迎来实验！', time: '昨天 21:03', likes: 8 },
-                        { author: '热心同学', content: '补充一下，每层还有公共洗衣机和饮水机，很方便～', time: '今天 08:45', likes: 5 }
-                    ]
-                },
-                {
-                    title: '美食节来啦！本周五中午食堂前广场',
-                    author: '学生会宣传部',
-                    content: '🎉 一年一度的校园美食节将于本周五中午11:30在食堂前广场举行！今年有15个摊位：章鱼烧、冰糖葫芦、紫薯糕、钵钵鸡……还有学生会准备的抽奖活动！欢迎全校师生参加！',
-                    replies: [
-                        { author: '小吃货', content: '哇，期待！去年美食节我就吃到了超好吃的炸鲜奶，今年一定要早点去！', time: '昨天 10:22', likes: 23 },
-                        { author: '学生会', content: '回复小吃货：今年还会有神秘甜品哦，记得来抽奖！', time: '昨天 10:45', likes: 10 },
-                        { author: '高三学长', content: '高三党也要放松一下，到时候一定去凑热闹！', time: '昨天 15:38', likes: 7 },
-                        { author: '食堂阿姨', content: '我们食堂也会推出特价菜，欢迎大家～', time: '昨天 16:02', likes: 14 }
-                    ]
-                },
-                {
-                    // 极度乱码帖，仅能辨认“怎么”“男”“撒泼”“知道”“妙”
+                };
+
+                // 状态为2022时显示的乱码帖子
+                const glitchPost = {
                     title: ' 怎 么 办 男  撒泼 不 知    啊 ',
                     author: '    ',
                     content: ' 今 天 在   ， 突 然 有 个     泼 ， 我 完  不 知道 该 怎么 办 ， 结 果 他 又  了  来 ， 真  奇  。 大 家 快 来 看 看      事 ？  男  道  ？ ',
                     replies: [
-                        { author: ' 女 同 学 ', content: ' 我 也  到 了 ， 那 个     ，   道 他 为  么   ？   妙  。 ', time: '昨天 09:15', likes: 3 },
-                        { author: ' 旁 观 者 ', content: ' 不 知  怎   事 ， 但 那  的     妙 。 ', time: '昨天 09:47', likes: 9 },
-                        { author: ' 班 主 任 ', content: ' 同 学 们 ， 有 问 题 要 及 时 报 告 ，  要 跟   。 你  知  怎   吗 ？ 妙  就    师 。 ', time: '昨天 11:20', likes: 31 }
+                        { author: ' 不吃 ', content: ' 我 也  到 了 ， 那 个     ，   道 他 为  么   ？   妙  。 ', time: '2011年11月3日', likes: 3 },
+                        { author: ' 克莱 ', content: ' 不 知  怎   事 ， 但 那  的     妙 。 ', time: '2011年11月3日', likes: 9 },
+                        { author: ' 我皇', content: ' 么  狂，不 知到  乱  说   吗 。 ', time: '2011年11月3日', likes: 31 }
                     ]
+                };
+
+                if (state === '2026') {
+                    basePosts.push(normalPost);
+                } else {
+                    basePosts.push(glitchPost);
                 }
-            ];
+                return basePosts;
+            }
+
+            // ---------- 初始化论坛数据 ----------
+            const currentState = safeGetItem('globalTimeState', '2022');
+            let forumPosts = getForumPosts(currentState);
 
             const postListDiv = document.getElementById('post-list-container');
             const detailContainer = document.getElementById('post-detail-container');
@@ -783,7 +821,7 @@
                                 <div class="post-meta">
                                     <span><i class="fas fa-user"></i> ${post.author}</span>
                                     <span><i class="fas fa-comment-dots"></i> ${post.replies ? post.replies.length : 0} 条跟帖</span>
-                                    <span><i class="fas fa-clock"></i> 最后回复 今天</span>
+                                    <span><i class="fas fa-clock"></i> 最后回复 无法获取</span>
                                 </div>
                             </div>
                             <div class="post-extra">
@@ -843,12 +881,25 @@
                 detailContainer.classList.remove('active');
             }
 
+            // 初始渲染
             renderPostList();
             backBtn.addEventListener('click', backToList);
-
             postListDiv.style.display = 'flex';
             detailContainer.classList.remove('active');
 
+            // 监听全局状态变化
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'globalTimeState') {
+                    const newState = e.newValue || '2022';
+                    forumPosts = getForumPosts(newState);
+                    renderPostList();
+                    if (detailContainer.classList.contains('active')) {
+                        backToList();
+                    }
+                }
+            });
+
+            // 当切换到论坛页面时，确保列表可见（防止详情页状态残留）
             document.getElementById('nav-forum').addEventListener('click', function() {
                 setTimeout(() => {
                     if (document.getElementById('forum').classList.contains('active')) {
