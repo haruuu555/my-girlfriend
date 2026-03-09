@@ -1018,9 +1018,9 @@ window.openConditionalArchive8 = function() {
 // 检查档案08的答案
 window.checkArchive8Answer = function() {
   const answer = document.getElementById("answerArchive8")?.value.trim();
-  // 您可以根据需要设定答案，这里以 "致妙" 为例
-  if (answer === "胡青云和陈时茵") {
-    window.location.href = "huzhimiao_letter.html"; // 请确保该文件存在
+  // 同时包含两个名字即可，不关心顺序和中间的连接词
+  if (answer.includes("胡青云") && answer.includes("陈时茵")) {
+    window.location.href = "huzhimiao_letter.html";
   } else {
     document.getElementById("answerArchive8Result").innerText = "❌ 暗号错误，无法开启。";
   }
@@ -1095,4 +1095,5 @@ window.checkArchive8Answer = function() {
 </body>
 
 </html>
+
 
